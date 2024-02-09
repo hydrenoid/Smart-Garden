@@ -1,4 +1,14 @@
 #todo imports
+from console import update_message_display, run_gui
+import time
+import threading
+
+# Create a thread to start the console and wait 10 seconds for them to load
+gui_thread = threading.Thread(target=run_gui)
+gui_thread.start()
+time.sleep(10)
+
+update_message_display("hello")
 
 
 #todo Run diagnostic on hardware
