@@ -1,6 +1,5 @@
 import PySimpleGUI as sg
 import threading
-
 # Define the layout for the windows
 
 # Window 1: Display percentage value
@@ -8,7 +7,7 @@ layout_window1 = [
     [sg.Text('Percentage Value:', size=(15, 1), justification='center')],
     [sg.Text('', size=(15, 1), justification='center', key='-PERCENTAGE-')]
 ]
-
+    
 # Window 2: Buttons to stop pumps and turn off lights
 layout_window2 = [
     [sg.Button('Stop Pumps')],
@@ -22,10 +21,21 @@ layout_window3 = [
 ]
 
 
+layout_window4 = [
+    [sg.Text('Lights Schedule')],
+    [sg.Text('Start Time'), sg.InputText('08:00', size=(10,1), key='-LIGHTS_START-'), sg.Button('+', key='-LIGHTS_START_INC'), sg.Button('-', key='-LIGHTS_START_DEC')],
+    [sg.Text('End Time  '), sg.InputText('20:00', size=(10,1), key='-LIGHTS_END-'), sg.Button('+', key='-LIGHTS_END_INC'), sg.Button('-', key='-LIGHTS_END_DEC')],
+    [sg.Text('')],
+    [sg.Text('Water Pumps Schedule')],
+    [sg.Text('Start Time'), sg.InputText('08:00', size=(10,1), key='-PUMPS_START-'), sg.Button('+', key='-PUMPS_START_INC'), sg.Button('-', key='-PUMPS_START_DEC')],
+    [sg.Text('End Time  '), sg.InputText('20:00', size=(10,1), key='-PUMPS_END-'), sg.Button('+', key='-PUMPS_END_INC'), sg.Button('-', key='-PUMPS_END_DEC')],
+    [sg.Button('Save'), sg.Button('Exit')]
+]
+
+
 # Function to update the message display
 def update_message_display(message):
     window3['-MESSAGES-'].print(message)
-
 
 def run_gui():
     global window3
@@ -33,17 +43,20 @@ def run_gui():
     window1 = sg.Window('Percentage Value', layout_window1, finalize=True)
     window2 = sg.Window('Control Panel', layout_window2)
     window3 = sg.Window('Message Display', layout_window3)
+    window4 = sg.Window('Garden Control Panel', layout_window4)
+
+    
 
     # Event loop to handle interactions with the windows
     while True:
         event, values = window1.read(timeout=100)  # Timeout for non-blocking read
-
+        
         # Check if the window is closed
-        if event == sg.WINDOW_CLOSED:
+        if event == sg.WIN_CLOSED or event == 'Exit':
             break
-
+        
         # Update the percentage value (random value for demonstration)
-        percentage_value = 85  # Example value (you can replace this with your actual value)
+        percentage_value = 75  # Example value (you can replace this with your actual value)
         window1['-PERCENTAGE-'].update(f'{percentage_value}%', text_color='green' if percentage_value > 80 else 'red')
 
         # Handle events for window 2
@@ -66,14 +79,79 @@ def run_gui():
             window3['-INPUT-'].update('')  # Clear the input field after sending
             update_message_display(message)  # Update message display when a new message is sent
 
+        event4, values4 = window4.read(timeout=100)
+        
+        if event4 == sg.WIN_CLOSED or event4 == 'Exit':
+            break
+        # Handling button clicks to increment and decrement times
+        if event4 == '-LIGHTS_START_INC':
+            current_time = values4['-LIGHTS_START-'] if values4['-LIGHTS_START-'] else '00:00'
+            hour, minute = current_time.split(':')
+            minute = str((int(minute) + 1) % 60).zfill(2)
+            hour = str((int(hour) + (int(minute) == 0)) % 24).zfill(2)
+            window4['-LIGHTS_START-'].update(f"{hour}:{minute}")
+        elif event4 == '-LIGHTS_START_DEC':
+            current_time = values4['-LIGHTS_START-'] if values4['-LIGHTS_START-'] else '00:00'
+            hour, minute = current_time.split(':')
+            minute = str((int(minute) - 1) % 60).zfill(2)
+            hour = str((int(hour) - (int(minute) == 59)) % 24).zfill(2)
+            window4['-LIGHTS_START-'].update(f"{hour}:{minute}")
+        elif event4 == '-LIGHTS_END_INC':
+            current_time = values4['-LIGHTS_END-'] if values4['-LIGHTS_END-'] else '00:00'
+            hour, minute = current_time.split(':')
+            minute = str((int(minute) + 1) % 60).zfill(2)
+            hour = str((int(hour) + (int(minute) == 0)) % 24).zfill(2)
+            window4['-LIGHTS_END-'].update(f"{hour}:{minute}")
+        elif event4 == '-LIGHTS_END_DEC':
+            current_time = values4['-LIGHTS_END-'] if values4['-LIGHTS_END-'] else '00:00'
+            hour, minute = current_time.split(':')
+            minute = str((int(minute) - 1) % 60).zfill(2)
+            hour = str((int(hour) - (int(minute) == 59)) % 24).zfill(2)
+            window4['-LIGHTS_END-'].update(f"{hour}:{minute}")
+        elif event4 == '-PUMPS_START_INC':
+            current_time = values4['-PUMPS_START-'] if values4['-PUMPS_START-'] else '00:00'
+            hour, minute = current_time.split(':')
+            minute = str((int(minute) + 1) % 60).zfill(2)
+            hour = str((int(hour) + (int(minute) == 0)) % 24).zfill(2)
+            window4['-PUMPS_START-'].update(f"{hour}:{minute}")
+        elif event4 == '-PUMPS_START_DEC':
+            current_time = values4['-PUMPS_START-'] if values4['-PUMPS_START-'] else '00:00'
+            hour, minute = current_time.split(':')
+            minute = str((int(minute) - 1) % 60).zfill(2)
+            hour = str((int(hour) - (int(minute) == 59)) % 24).zfill(2)
+            window4['-PUMPS_START-'].update(f"{hour}:{minute}")
+        elif event4 == '-PUMPS_END_INC':
+            current_time = values4['-PUMPS_END-'] if values4['-PUMPS_END-'] else '00:00'
+            hour, minute = current_time.split(':')
+            minute = str((int(minute) + 1) % 60).zfill(2)
+            hour = str((int(hour) + (int(minute) == 0)) % 24).zfill(2)
+            window4['-PUMPS_END-'].update(f"{hour}:{minute}")
+        elif event4 == '-PUMPS_END_DEC':
+            current_time = values4['-PUMPS_END-'] if values4['-PUMPS_END-'] else '00:00'
+            hour, minute = current_time.split(':')
+            minute = str((int(minute) - 1) % 60).zfill(2)
+            hour = str((int(hour) - (int(minute) == 59)) % 24).zfill(2)
+            window4['-PUMPS_END-'].update(f"{hour}:{minute}")
+
+    # Handle saving the schedule
+        elif event4 == 'Save':
+            lights_start = values4['-LIGHTS_START-']
+            lights_end = values4['-LIGHTS_END-']
+            pumps_start = values4['-PUMPS_START-']
+            pumps_end = values4['-PUMPS_END-']
+            print(f"Lights Schedule: {lights_start} - {lights_end}")
+            print(f"Water Pumps Schedule: {pumps_start} - {pumps_end}")
+
+        
     # Close the windows
     window1.close()
     window2.close()
     window3.close()
+    window4.close()
 
 # Create a thread to run the GUI
-# gui_thread = threading.Thread(target=run_gui)
-# gui_thread.start()
+#gui_thread = threading.Thread(target=run_gui)
+#gui_thread.start()
 
 # Main program continues to run concurrently with the GUI
 # You can put your main program logic here
