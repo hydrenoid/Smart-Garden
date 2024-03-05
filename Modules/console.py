@@ -8,15 +8,17 @@ def read_schedule(filename):
         with open(filename, 'r') as file:
             # Read the contents of the file
             file_contents = file.read()
-            print("Contents of the file:")
+            
             return file_contents.split()
 
     except FileNotFoundError:
         print(f"The file {filename} was not found.")
         file_contents = ['08:00', '20:00', '08:00', '20:00']
+        return file_contents
     except Exception as e:
         print(f"An error occurred: {str(e)}")
         file_contents = ['08:00', '20:00', '08:00', '20:00']
+        return file_contents
 
 
 # Save the new schedule to the config file, newSchedule needs to be in array format of strings
@@ -34,7 +36,7 @@ def save_schedule(filename, newSchedule):
         print(f"An error occurred: {str(e)}")
 
 
-schedule = read_schedule('Config/Schedule.txt')
+schedule = read_schedule('../Config/Schedule.txt')
 
 # Define the layout for the windows
 
@@ -178,7 +180,7 @@ def run_gui():
             print(f"Lights Schedule.txt: {lights_start} - {lights_end}")
             print(f"Water Pumps Schedule.txt: {pumps_start} - {pumps_end}")
             new_schedule = [lights_start, lights_end, pumps_start, pumps_end]
-            save_schedule('Config/Schedule.txt', new_schedule)
+            save_schedule('../Config/Schedule.txt', new_schedule)
 
 
         
