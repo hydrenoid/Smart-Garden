@@ -1,5 +1,41 @@
 import PySimpleGUI as sg
 import threading
+
+
+# Read the schedule from the file into an array (Light Start = 0, Light End = 1, Water Start = 2, Water End = 3)
+def read_schedule(filename):
+    try:
+        with open(filename, 'r') as file:
+            # Read the contents of the file
+            file_contents = file.read()
+            print("Contents of the file:")
+            return file_contents.split()
+
+    except FileNotFoundError:
+        print(f"The file {filename} was not found.")
+        file_contents = ['08:00', '20:00', '08:00', '20:00']
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        file_contents = ['08:00', '20:00', '08:00', '20:00']
+
+
+# Save the new schedule to the config file, newSchedule needs to be in array format of strings
+def save_schedule(filename, newSchedule):
+    try:
+        # Open the file in write mode to overwrite the content
+        with open(filename, 'w') as file:
+            # Write each word/element on its own line
+            for line in newSchedule:
+                file.write(line + '\n')
+        print("Content modified and saved successfully!")
+    except FileNotFoundError:
+        print(f"The file {filename} was not found.")
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+
+
+schedule = read_schedule('Config/Schedule.txt')
+
 # Define the layout for the windows
 
 # Window 1: Display percentage value
@@ -22,13 +58,13 @@ layout_window3 = [
 
 
 layout_window4 = [
-    [sg.Text('Lights Schedule')],
-    [sg.Text('Start Time'), sg.InputText('08:00', size=(10,1), key='-LIGHTS_START-'), sg.Button('+', key='-LIGHTS_START_INC'), sg.Button('-', key='-LIGHTS_START_DEC')],
-    [sg.Text('End Time  '), sg.InputText('20:00', size=(10,1), key='-LIGHTS_END-'), sg.Button('+', key='-LIGHTS_END_INC'), sg.Button('-', key='-LIGHTS_END_DEC')],
+    [sg.Text('Lights Schedule.txt')],
+    [sg.Text('Start Time'), sg.InputText(schedule[0], size=(10,1), key='-LIGHTS_START-'), sg.Button('+', key='-LIGHTS_START_INC'), sg.Button('-', key='-LIGHTS_START_DEC')],
+    [sg.Text('End Time  '), sg.InputText(schedule[1], size=(10,1), key='-LIGHTS_END-'), sg.Button('+', key='-LIGHTS_END_INC'), sg.Button('-', key='-LIGHTS_END_DEC')],
     [sg.Text('')],
-    [sg.Text('Water Pumps Schedule')],
-    [sg.Text('Start Time'), sg.InputText('08:00', size=(10,1), key='-PUMPS_START-'), sg.Button('+', key='-PUMPS_START_INC'), sg.Button('-', key='-PUMPS_START_DEC')],
-    [sg.Text('End Time  '), sg.InputText('20:00', size=(10,1), key='-PUMPS_END-'), sg.Button('+', key='-PUMPS_END_INC'), sg.Button('-', key='-PUMPS_END_DEC')],
+    [sg.Text('Water Pumps Schedule.txt')],
+    [sg.Text('Start Time'), sg.InputText(schedule[2], size=(10,1), key='-PUMPS_START-'), sg.Button('+', key='-PUMPS_START_INC'), sg.Button('-', key='-PUMPS_START_DEC')],
+    [sg.Text('End Time  '), sg.InputText(schedule[3], size=(10,1), key='-PUMPS_END-'), sg.Button('+', key='-PUMPS_END_INC'), sg.Button('-', key='-PUMPS_END_DEC')],
     [sg.Button('Save'), sg.Button('Exit')]
 ]
 
@@ -139,8 +175,11 @@ def run_gui():
             lights_end = values4['-LIGHTS_END-']
             pumps_start = values4['-PUMPS_START-']
             pumps_end = values4['-PUMPS_END-']
-            print(f"Lights Schedule: {lights_start} - {lights_end}")
-            print(f"Water Pumps Schedule: {pumps_start} - {pumps_end}")
+            print(f"Lights Schedule.txt: {lights_start} - {lights_end}")
+            print(f"Water Pumps Schedule.txt: {pumps_start} - {pumps_end}")
+            new_schedule = [lights_start, lights_end, pumps_start, pumps_end]
+            save_schedule('Config/Schedule.txt', new_schedule)
+
 
         
     # Close the windows
