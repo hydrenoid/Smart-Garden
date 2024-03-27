@@ -1,4 +1,5 @@
 import PySimpleGUI as sg
+from main import system
 import threading
 
 
@@ -102,8 +103,9 @@ def run_gui():
         if event2 == sg.WINDOW_CLOSED:
             break
         elif event2 == 'Stop Pumps':
-            print('Pumps stopped')  # Example action (replace with your code)
-            update_message_display('Pumps stopped')  # Update message display when pumps are stopped
+            system.toggle_force()
+            print('Pumps switched')  # Example action (replace with your code)
+            update_message_display('Pumps switched')  # Update message display when pumps are stopped
         elif event2 == 'Turn Off Lights':
             print('Lights turned off')  # Example action (replace with your code)
             update_message_display('Lights turned off')  # Update message display when lights are turned off

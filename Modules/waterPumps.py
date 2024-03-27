@@ -1,11 +1,25 @@
+from gpiozero import OutputDevice
 
-# TODO: Checks water level
-def check_water():
-    print('Water level is 0%.')
+HP1_RELAY = Relay(12)
+HP2_RELAY = Relay(16)
+SECONDS_TO_WATER = 100
+
+
+class Relay(OutputDevice):
+    def __init__(self, pin):
+        super(Relay, self).__init__(pin)
+
+# Remember off and on are switched for the relay
+HP1_RELAY = Relay(12)
+HP2_RELAY = Relay(16)
+SECONDS_TO_WATER = 100
+
 
 
 # TODO: Turns all pumps off
 def all_pumps_off():
+
+
     print('All pumps are off.')
 
 
@@ -16,6 +30,8 @@ def all_pumps_on():
 
 # TODO: Turns all hydroponic pumps on
 def hydroponics_on():
+    HP1_RELAY.off()
+    HP2_RELAY.off()
     print('All hydroponic pumps are on.')
 
 
@@ -26,6 +42,8 @@ def potted_on():
 
 # TODO: Turns all hydroponic pumps off
 def hydroponics_off():
+    HP1_RELAY.on()
+    HP2_RELAY.on()
     print('All hydroponic pumps are off.')
 
 
