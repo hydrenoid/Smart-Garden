@@ -1,24 +1,22 @@
 from gpiozero import OutputDevice
 
-HP1_RELAY = Relay(12)
-HP2_RELAY = Relay(16)
-SECONDS_TO_WATER = 100
+
 
 
 class Relay(OutputDevice):
     def __init__(self, pin):
         super(Relay, self).__init__(pin)
-
-# Remember off and on are switched for the relay
+        
 HP1_RELAY = Relay(12)
 HP2_RELAY = Relay(16)
 SECONDS_TO_WATER = 100
 
 
 
+
 # TODO: Turns all pumps off
 def all_pumps_off():
-
+    
 
     print('All pumps are off.')
 

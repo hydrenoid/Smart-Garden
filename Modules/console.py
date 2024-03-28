@@ -1,5 +1,6 @@
 import PySimpleGUI as sg
-from main import system
+import waterPumps
+
 import threading
 
 
@@ -71,12 +72,14 @@ layout_window4 = [
     [sg.Button('Save'), sg.Button('Exit')]
 ]
 
+print('windows defined')
 
 # Function to update the message display
 def update_message_display(message):
     window3['-MESSAGES-'].print(message)
 
 def run_gui():
+    
     global window3
     # Create the windows
     window1 = sg.Window('Percentage Value', layout_window1, finalize=True)
@@ -84,10 +87,13 @@ def run_gui():
     window3 = sg.Window('Message Display', layout_window3)
     window4 = sg.Window('Garden Control Panel', layout_window4)
 
-    
+    # Set the event to indicate that the GUI is ready
+     
 
     # Event loop to handle interactions with the windows
     while True:
+        
+        
         event, values = window1.read(timeout=100)  # Timeout for non-blocking read
         
         # Check if the window is closed
@@ -103,6 +109,9 @@ def run_gui():
         if event2 == sg.WINDOW_CLOSED:
             break
         elif event2 == 'Stop Pumps':
+            print('thread about to import')
+            import main
+            print('thread imported')
             system.toggle_force()
             print('Pumps switched')  # Example action (replace with your code)
             update_message_display('Pumps switched')  # Update message display when pumps are stopped
