@@ -6,8 +6,8 @@ class Relay(OutputDevice):
         super(Relay, self).__init__(pin)
 
 
-HP1_RELAY = Relay(12)
-HP2_RELAY = Relay(16)
+HP1_RELAY = OutputDevice(12,initial_value=None)
+HP2_RELAY = OutputDevice(16,initial_value=None)
 SECONDS_TO_WATER = 100
 
 

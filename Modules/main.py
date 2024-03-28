@@ -19,7 +19,9 @@ class System:
     def check_hp_time(self, time):
         print(time)
         print(self.hp_start_time)
-        if self.hp_start_time < time:
+        elapsed_time = (time - self.hp_start_time) % 60
+        print(elapsed_time)
+        if elapsed_time < 30:
             self.hydroponic_pump = 1
         else:
             self.hydroponic_pump = 0
