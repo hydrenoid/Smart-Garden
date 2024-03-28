@@ -1,9 +1,7 @@
 import PySimpleGUI as sg
-import time
-import threading
 import datetime
 import waterPumps as pumps
-import threading
+
 
 class System:
     def __init__(self):
@@ -19,12 +17,14 @@ class System:
 
     # if within 30 min turn on, otherwise turn off, time needs to just me minutes
     def check_hp_time(self, time):
-        if self.hp_start_time < time: # TODO: fix this, needs to read from current time
+        print(time)
+        print(self.hp_start_time)
+        if self.hp_start_time < time:
             self.hydroponic_pump = 1
         else:
             self.hydroponic_pump = 0
 
-    # TODO: needs time in full HH:MM format
+    # needs time in full HH:MM format
     def check_pot_time(self, time):
         if self.potted_start_time < time < self.potted_end_time:
             self.pot_pump = 1
@@ -33,32 +33,32 @@ class System:
 
     def pumps_switch(self):
         if self.force_off == 1:
-            # TODO: Turn all pumps off, then break out of method
+            # Turn all pumps off, then break out of method
             pumps.hydroponics_off()
             pumps.all_pumps_off()
             return
 
-        if(self.hydroponic_pump == 1):
-            #TODO: Turn hp pumps on
+        if self.hydroponic_pump == 1:
+            # Turn hp pumps on
             pumps.hydroponics_on()
         else:
-            #TODO: Turn hp pumps off
+            # Turn hp pumps off
             pumps.hydroponics_off()
 
-        if(self.pot_pump == 1):
-            #TODO: turn pot pumps on
+        if self.pot_pump == 1:
+            # Turn pot pumps on
             pumps.potted_on()
         else:
-            #TODO: turn pot pumps off
+            # turn pot pumps off
             pumps.potted_off()
-
 
     def toggle_force(self):
         if self.force_off == 1:
             self.force_off = 0
+            return 0
         else:
             self.force_off = 1
-
+            return 1
 
 
 # Read the schedule from the file into an array (Light Start = 0, Light End = 1, Water Start = 2, Water End = 3)
@@ -81,18 +81,19 @@ def read_schedule(filename):
 
 
 # Save the new schedule to the config file, newSchedule needs to be in array format of strings
-def save_schedule(filename, newSchedule):
+def save_schedule(filename, new_schedule):
     try:
         # Open the file in write mode to overwrite the content
         with open(filename, 'w') as file:
             # Write each word/element on its own line
-            for line in newSchedule:
+            for line in new_schedule:
                 file.write(line + '\n')
         print("Content modified and saved successfully!")
     except FileNotFoundError:
         print(f"The file {filename} was not found.")
     except Exception as e:
         print(f"An error occurred: {str(e)}")
+
 
 system = System()
 
@@ -108,7 +109,8 @@ layout_window1 = [
 
 # Window 2: Buttons to stop pumps and turn off lights
 layout_window2 = [
-    [sg.Button('Stop Pumps')],
+    [sg.Button('Toggle All Pumps')],
+    [sg.Button('Hydroponic Pumps On')],
     [sg.Button('Turn Off Lights')]
 ]
 
@@ -139,13 +141,11 @@ def update_message_display(message):
     window3['-MESSAGES-'].print(message)
 
 
-
 # Create the windows
 window1 = sg.Window('Percentage Value', layout_window1, finalize=True)
 window2 = sg.Window('Control Panel', layout_window2)
 window3 = sg.Window('Message Display', layout_window3)
 window4 = sg.Window('Garden Control Panel', layout_window4)
-
 
 while True:
 
@@ -172,9 +172,6 @@ while True:
     # turn pumps on if they should be, or off if they should be off
     system.pumps_switch()
 
-
-
-
     event, values = window1.read(timeout=100)  # Timeout for non-blocking read
 
     # Check if the window is closed
@@ -189,13 +186,23 @@ while True:
     event2, values2 = window2.read(timeout=100)  # Timeout for non-blocking read
     if event2 == sg.WINDOW_CLOSED:
         break
-    elif event2 == 'Stop Pumps':
-        system.toggle_force()
-        print('Pumps switched')  # Example action (replace with your code)
-        update_message_display('Pumps switched')  # Update message display when pumps are stopped
+    elif event2 == 'Toggle All Pumps':
+        toggle = system.toggle_force()
+
+        if toggle:
+            print('All pumps are now enabled')
+            update_message_display('All pumps are now enabled')
+        else:
+            print('All pumps are now disabled')
+            update_message_display('All pumps are now disabled')
+
     elif event2 == 'Turn Off Lights':
         print('Lights turned off')  # Example action (replace with your code)
         update_message_display('Lights turned off')  # Update message display when lights are turned off
+    elif event2 == 'Hydroponic Pumps On':
+        print('Hydroponic Pumps Turned On')
+        system.hp_start_time = current_minute
+        update_message_display('Hydroponic Pumps On')
 
     # Handle events for window 3
     event3, values3 = window3.read(timeout=100)  # Timeout for non-blocking read
