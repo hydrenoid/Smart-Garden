@@ -1,0 +1,17 @@
+from gpiozero import OutputDevice
+
+class Relay(OutputDevice):
+    def __init__(self, pin, active_high):
+        super(Relay, self).__init__(pin, active_high)
+        
+RELAY = Hardware.Relay(12, False)
+SECONDS_TO_WATER = 10
+
+def water_plant(relay, seconds):
+    relay.on()
+    print("Plant is being watered!")
+    time.sleep(seconds)
+    print("Watering is finished!")
+    relay.off()
+    
+water_plant(RELAY, SECONDS_TO_WATER)
