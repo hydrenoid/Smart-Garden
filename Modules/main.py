@@ -1,6 +1,7 @@
 import PySimpleGUI as sg
 import datetime
 import waterPumps as pumps
+import growLights as lights
 
 
 class System:
@@ -12,10 +13,30 @@ class System:
         self.potted_start_time = schedule[2]
         self.potted_end_time = schedule[3]
         self.pot_pump = 0
+        self.light_start = schedule[0]
+        self.light_end = schedule[1]
         self.lights = 0
-        self.force_off = 1
+        self.pump_force_off = 1
+        self.light_force_off = 1
 
-    # if within 30 min turn on, otherwise turn off, time needs to just me minutes
+    # turn lights on if they need to be or turn them off
+    def lights_switch(self):
+        if self.lights:
+            lights.lights_on()
+        else:
+            lights.lights_off()
+
+    # Turn lights on if within schedule, otherwise turn them off
+    def check_lights(self, time):
+        if self.light_force_off:
+            self.lights = 0
+            return
+        elif self.light_start < time < self.light_end:
+            self.lights = 1
+        else:
+            self.lights = 0
+
+    # if within 30 min turn on, otherwise turn off, time needs to just be minutes
     def check_hp_time(self, time):
         print(time)
         print(self.hp_start_time)
@@ -34,7 +55,7 @@ class System:
             self.pot_pump = 0
 
     def pumps_switch(self):
-        if self.force_off == 1:
+        if self.pump_force_off == 1:
             # Turn all pumps off, then break out of method
             pumps.hydroponics_off()
             pumps.all_pumps_off()
@@ -55,11 +76,19 @@ class System:
             pumps.potted_off()
 
     def toggle_force(self):
-        if self.force_off == 1:
-            self.force_off = 0
+        if self.pump_force_off == 1:
+            self.pump_force_off = 0
             return 0
         else:
-            self.force_off = 1
+            self.pump_force_off = 1
+            return 1
+
+    def toggle_lights(self):
+        if self.light_force_off == 1:
+            self.light_force_off = 0
+            return 0
+        else:
+            self.light_force_off = 1
             return 1
 
 
@@ -113,7 +142,7 @@ layout_window1 = [
 layout_window2 = [
     [sg.Button('Toggle All Pumps')],
     [sg.Button('Hydroponic Pumps On')],
-    [sg.Button('Turn Off Lights')]
+    [sg.Button('Toggle Lights')]
 ]
 
 # Window 3: Display messages
@@ -144,10 +173,10 @@ def update_message_display(message):
 
 
 # Create the windows
-window1 = sg.Window('Percentage Value', layout_window1, finalize=True)
-window2 = sg.Window('Control Panel', layout_window2)
-window3 = sg.Window('Message Display', layout_window3)
-window4 = sg.Window('Garden Control Panel', layout_window4)
+window1 = sg.Window('Percentage Value', layout_window1, size=(100, 100), location=(100, 100), finalize=True)
+window2 = sg.Window('Control Panel', layout_window2, size=(100, 100), location=(100, 100))
+window3 = sg.Window('Message Display', layout_window3, size=(100, 100), location=(100, 100))
+window4 = sg.Window('Garden Control Panel', layout_window4, size=(100, 100), location=(100, 100))
 
 while True:
 
@@ -168,11 +197,17 @@ while True:
     # check if hp pumps should be running
     system.check_hp_time(current_minute)
 
+    # check if lights should be on
+    system.check_lights(time_string)
+
     # check if pot plants should be on
     system.check_pot_time(time_string)
 
     # turn pumps on if they should be, or off if they should be off
     system.pumps_switch()
+
+    # turn lights on if they should be on, or turn them off
+    system.lights_switch()
 
     event, values = window1.read(timeout=100)  # Timeout for non-blocking read
 
@@ -198,9 +233,15 @@ while True:
             print('All pumps are now disabled')
             update_message_display('All pumps are now disabled')
 
-    elif event2 == 'Turn Off Lights':
-        print('Lights turned off')  # Example action (replace with your code)
-        update_message_display('Lights turned off')  # Update message display when lights are turned off
+    elif event2 == 'Toggle Lights':
+        toggle = system.toggle_lights()
+
+        if toggle:
+            print('Lights are on')
+            update_message_display('Lights are on')
+        else:
+            print('Lights are off')
+            update_message_display('Lights are off')
     elif event2 == 'Hydroponic Pumps On':
         print('Hydroponic Pumps Turned On')
         system.hp_start_time = current_minute
