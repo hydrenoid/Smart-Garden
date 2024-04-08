@@ -28,13 +28,18 @@ class System:
 
     # Turn lights on if within schedule, otherwise turn them off
     def check_lights(self, time):
+        print('Current time -- ' + time)
+        print('Start light -- ' + self.light_start)
+        print('End light -- ' + self.light_end)
         if self.light_force_off:
             self.lights = 0
             return
         elif self.light_start < time < self.light_end:
             self.lights = 1
+            print('Lights should be on')
         else:
             self.lights = 0
+            print('Lights should be off')
 
     # if within 30 min turn on, otherwise turn off, time needs to just be minutes
     def check_hp_time(self, time):
@@ -173,10 +178,10 @@ def update_message_display(message):
 
 
 # Create the windows
-window1 = sg.Window('Percentage Value', layout_window1, size=(100, 100), location=(100, 100), finalize=True)
-window2 = sg.Window('Control Panel', layout_window2, size=(100, 100), location=(100, 100))
-window3 = sg.Window('Message Display', layout_window3, size=(100, 100), location=(100, 100))
-window4 = sg.Window('Garden Control Panel', layout_window4, size=(100, 100), location=(100, 100))
+window1 = sg.Window('Percentage Value', layout_window1, size=(600, 100), location=(310, 370), finalize=True)
+window2 = sg.Window('Control Panel', layout_window2, size=(300, 300), location=(300, 0))
+window3 = sg.Window('Message Display', layout_window3, size=(300, 300), location=(600, 0))
+window4 = sg.Window('Garden Control Panel', layout_window4, size=(300, 600), location=(0, 0))
 
 while True:
 
