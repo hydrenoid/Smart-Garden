@@ -4,6 +4,11 @@ import time
 from fastiecm import fastiecm
 from picamera2 import Picamera2, Preview
 
+picam2 = Picamera2()
+camera_config = picam2.create_still_configuration(main={"size": (1920, 1080)}, lores={"size": (1920, 1080)},
+                                                      display="lores")
+picam2.configure(camera_config)
+picam2.start()
 
 def display(image, image_name):
     image = np.array(image, dtype=float)/float(255)
@@ -42,18 +47,15 @@ def calc_ndvi(image):
 
 #TODO: Takes a picture and saves it to the file "/Smart-Garden/Images/Originals"
 def take_picture():
-    picam2 = Picamera2()
-    camera_config = picam2.create_still_configuration(main={"size": (1920, 1080)}, lores={"size": (1920, 1080)},
-                                                      display="lores")
-    picam2.configure(camera_config)
-    picam2.start()
-    time.sleep(1)
+    
+    
 
     original = picam2.capture_array("main")
 
     timestr = time.strftime("%Y%m%d-%H%M%S")
 
-    cv2.imwrite('Images/Originals/original', original)
+    cv2.imwrite('../Images/Originals/original.png', original)
+    print('PICTURE TAKEN AND SAVED')
 
     #todo process the image
     #health = process_image(original, timestr)
