@@ -19,7 +19,7 @@ class System:
         self.lights = 0
         self.pump_force_off = 1
         self.light_force_off = 1
-        self.picture_file = '../Images/Originals/original.png'
+        self.picture_file = '../Images/Originals/resized.png'
 
     # turn lights on if they need to be or turn them off
     def lights_switch(self):
@@ -180,7 +180,7 @@ def update_message_display(message):
 
 
 # Create the windows
-window1 = sg.Window('NDVI Image', layout_window1, size=(600, 100), location=(310, 370), finalize=True)
+window1 = sg.Window('NDVI Image', layout_window1, finalize=True)
 window2 = sg.Window('Control Panel', layout_window2, size=(300, 300), location=(300, 0))
 window3 = sg.Window('Message Display', layout_window3, size=(300, 300), location=(600, 0))
 window4 = sg.Window('Garden Control Panel', layout_window4, size=(300, 600), location=(0, 0))
@@ -223,8 +223,8 @@ while True:
         break
 
     # Update the percentage value (random value for demonstration)
-    percentage_value = 75  # Example value (you can replace this with your actual value)
-    window1['-PERCENTAGE-'].update(f'{percentage_value}%', text_color='green' if percentage_value > 80 else 'red')
+    #percentage_value = 75  # Example value (you can replace this with your actual value)
+    #window1['-PERCENTAGE-'].update(f'{percentage_value}%', text_color='green' if percentage_value > 80 else 'red')
 
     # Handle events for window 2
     event2, values2 = window2.read(timeout=100)  # Timeout for non-blocking read

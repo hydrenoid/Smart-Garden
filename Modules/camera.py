@@ -55,6 +55,14 @@ def take_picture():
     timestr = time.strftime("%Y%m%d-%H%M%S")
 
     cv2.imwrite('../Images/Originals/original.png', original)
+    
+    # Resize the image to fit in the window, e.g., 800x450
+    resized_image = cv2.resize(original, (800, 450))
+
+    # Save the resized image temporarily (or you can use a memory buffer)
+    temp_path = '../Images/Originals/resized.png'
+    cv2.imwrite(temp_path, resized_image)
+    
     print('PICTURE TAKEN AND SAVED')
 
     #todo process the image
