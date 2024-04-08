@@ -62,6 +62,14 @@ def take_picture():
     # Save the resized image temporarily (or you can use a memory buffer)
     temp_path = '../Images/Originals/resized.png'
     cv2.imwrite(temp_path, resized_image)
+
+
+    contrasted_image = contrast_stretch(original)
+    ndvi_image = calc_ndvi(contrasted_image)
+    ndvi_contrasted = contrast_stretch(ndvi_image)
+    color_mapped_prep = ndvi_contrasted.astype(np.uint8)
+    color_mapped_image = cv2.applyColorMap(color_mapped_prep, fastiecm)
+    cv2.imwrite('../Images/final.png', color_mapped_image)
     
     print('PICTURE TAKEN AND SAVED')
 
