@@ -19,7 +19,7 @@ class System:
         self.lights = 0
         self.pump_force_off = 1
         self.light_force_off = 1
-        self.picture_file = 'Images/Originals/original'
+        self.picture_file = '../Images/Originals/original.png'
 
     # turn lights on if they need to be or turn them off
     def lights_switch(self):
@@ -141,8 +141,7 @@ schedule = read_schedule('../Config/Schedule.txt')
 
 # Window 1: Display percentage value
 layout_window1 = [
-    [sg.Text('Percentage Value:', size=(15, 1), justification='center')],
-    [sg.Text('', size=(15, 1), justification='center', key='-PERCENTAGE-')]
+    [sg.Image(key="-IMAGE-", filename=system.picture_file)]
 ]
 
 # Window 2: Buttons to stop pumps and turn off lights
@@ -181,7 +180,7 @@ def update_message_display(message):
 
 
 # Create the windows
-window1 = sg.Window('Percentage Value', layout_window1, size=(600, 100), location=(310, 370), finalize=True)
+window1 = sg.Window('NDVI Image', layout_window1, size=(600, 100), location=(310, 370), finalize=True)
 window2 = sg.Window('Control Panel', layout_window2, size=(300, 300), location=(300, 0))
 window3 = sg.Window('Message Display', layout_window3, size=(300, 300), location=(600, 0))
 window4 = sg.Window('Garden Control Panel', layout_window4, size=(300, 600), location=(0, 0))
@@ -258,6 +257,7 @@ while True:
         print('Taking picture')
         camera.take_picture()
         update_message_display('Picture taken')
+        window1["-IMAGE-"].update(filename=system.picture_file)
 
 
 
