@@ -53,10 +53,10 @@ def take_picture():
 
     timestr = time.strftime("%Y%m%d-%H%M%S")
 
-    cv2.imwrite('Images/Originals/original_' + timestr, original)
+    cv2.imwrite('Images/Originals/original', original)
 
     #todo process the image
-    health = process_image(original, timestr)
+    #health = process_image(original, timestr)
 
 
 #TODO: Sparse out the plants from the rest of picture

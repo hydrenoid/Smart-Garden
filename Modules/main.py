@@ -2,6 +2,7 @@ import PySimpleGUI as sg
 import datetime
 import waterPumps as pumps
 import growLights as lights
+import camera as camera
 
 
 class System:
@@ -18,6 +19,7 @@ class System:
         self.lights = 0
         self.pump_force_off = 1
         self.light_force_off = 1
+        self.picture_file = 'Images/Originals/original'
 
     # turn lights on if they need to be or turn them off
     def lights_switch(self):
@@ -147,7 +149,8 @@ layout_window1 = [
 layout_window2 = [
     [sg.Button('Toggle All Pumps')],
     [sg.Button('Hydroponic Pumps On')],
-    [sg.Button('Toggle Lights')]
+    [sg.Button('Toggle Lights')],
+    [sg.Button('Take Picture')]
 ]
 
 # Window 3: Display messages
@@ -251,6 +254,12 @@ while True:
         print('Hydroponic Pumps Turned On')
         system.hp_start_time = current_minute
         update_message_display('Hydroponic Pumps On')
+    elif event2 == 'Take Picture':
+        print('Taking picture')
+        camera.take_picture()
+        update_message_display('Picture taken')
+
+
 
     # Handle events for window 3
     event3, values3 = window3.read(timeout=100)  # Timeout for non-blocking read
