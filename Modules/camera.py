@@ -57,11 +57,8 @@ def take_picture():
     cv2.imwrite('../Images/Originals/original.png', original)
     
     # Resize the image to fit in the window, e.g., 800x450
-    resized_image = cv2.resize(original, (800, 450))
-
-    # Save the resized image temporarily (or you can use a memory buffer)
-    temp_path = '../Images/Originals/resized.png'
-    cv2.imwrite(temp_path, resized_image)
+    resized_orig_image = cv2.resize(original, (400, 225))
+    cv2.imwrite('../Images/Originals/resized.png', resized_orig_image)
 
 
     contrasted_image = contrast_stretch(original)
@@ -70,6 +67,13 @@ def take_picture():
     color_mapped_prep = ndvi_contrasted.astype(np.uint8)
     color_mapped_image = cv2.applyColorMap(color_mapped_prep, fastiecm)
     cv2.imwrite('../Images/final.png', color_mapped_image)
+    
+    # Resize the image to fit in the window, e.g., 800x450
+    resized_image = cv2.resize(color_mapped_image, (800, 450))
+
+    # Save the resized image temporarily (or you can use a memory buffer)
+    temp_path = '../Images/final_resized.png'
+    cv2.imwrite(temp_path, resized_image)
     
     print('PICTURE TAKEN AND SAVED')
 

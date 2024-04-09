@@ -180,10 +180,10 @@ def update_message_display(message):
 
 
 # Create the windows
-window1 = sg.Window('NDVI Image', layout_window1, finalize=True)
-window2 = sg.Window('Control Panel', layout_window2, size=(300, 300), location=(300, 0))
-window3 = sg.Window('Message Display', layout_window3, size=(300, 300), location=(600, 0))
-window4 = sg.Window('Garden Control Panel', layout_window4, size=(300, 600), location=(0, 0))
+window1 = sg.Window('NDVI Image', layout_window1, location=(0,0), finalize=True)
+window2 = sg.Window('Control Panel', layout_window2, size=(600, 200), location=(0, 330))
+window3 = sg.Window('Message Display', layout_window3, size=(300, 200), location=(640, 375))
+window4 = sg.Window('Schedule Panel', layout_window4, size=(300, 275), location=(630, 0))
 
 while True:
 
