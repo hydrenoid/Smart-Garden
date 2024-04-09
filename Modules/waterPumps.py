@@ -1,5 +1,7 @@
 from gpiozero import OutputDevice
 
+# 3rd relay to GPIO 20
+# 4th relay to GPIO 21
 
 class Relay(OutputDevice):
     def __init__(self, pin):
@@ -8,6 +10,8 @@ class Relay(OutputDevice):
 
 HP1_RELAY = OutputDevice(12,initial_value=None)
 HP2_RELAY = OutputDevice(16,initial_value=None)
+POT1_RELAY = OutputDevice(20,initial_value=None)
+POT2_RELAY = OutputDevice(21,initial_value=None)
 SECONDS_TO_WATER = 100
 
 
@@ -34,6 +38,8 @@ def hydroponics_on():
 
 # TODO: Turns all potted plants on
 def potted_on():
+    POT1_RELAY.off()
+    POT2_RELAY.off()
     print('All potted pumps are on.')
 
 
@@ -46,4 +52,6 @@ def hydroponics_off():
 
 # TODO: Turns all potted pumps off
 def potted_off():
+    POT1_RELAY.on()
+    POT2_RELAY.on()
     print('All potted pumps are off.')

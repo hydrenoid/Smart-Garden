@@ -146,9 +146,9 @@ layout_window1 = [
 
 # Window 2: Buttons to stop pumps and turn off lights
 layout_window2 = [
-    [sg.Button('Toggle All Pumps')],
+    [sg.Button('Toggle All Pumps', key="-BUTTON1-", button_color=('white', 'blue'))],
     [sg.Button('Hydroponic Pumps On')],
-    [sg.Button('Toggle Lights')],
+    [sg.Button('Toggle Lights', key="-BUTTON3-", button_color=('white', 'blue'))],
     [sg.Button('Take Picture')]
 ]
 
@@ -223,8 +223,8 @@ while True:
         break
 
     # Update the percentage value (random value for demonstration)
-    #percentage_value = 75  # Example value (you can replace this with your actual value)
-    #window1['-PERCENTAGE-'].update(f'{percentage_value}%', text_color='green' if percentage_value > 80 else 'red')
+    # percentage_value = 75  # Example value (you can replace this with your actual value)
+    # window1['-PERCENTAGE-'].update(f'{percentage_value}%', text_color='green' if percentage_value > 80 else 'red')
 
     # Handle events for window 2
     event2, values2 = window2.read(timeout=100)  # Timeout for non-blocking read
@@ -235,20 +235,25 @@ while True:
 
         if toggle:
             print('All pumps are now enabled')
+            window2["-BUTTON1-"].update(button_color=('black', 'yellow'))
             update_message_display('All pumps are now enabled')
         else:
             print('All pumps are now disabled')
             update_message_display('All pumps are now disabled')
+            window2["-BUTTON1-"].update(button_color=('white', 'blue'))
 
     elif event2 == 'Toggle Lights':
         toggle = system.toggle_lights()
 
         if toggle:
             print('Lights are on')
+            window2["-BUTTON3-"].update(button_color=('black', 'yellow'))
             update_message_display('Lights are on')
         else:
             print('Lights are off')
             update_message_display('Lights are off')
+            window2["-BUTTON3-"].update(button_color=('white', 'blue'))
+
     elif event2 == 'Hydroponic Pumps On':
         print('Hydroponic Pumps Turned On')
         system.hp_start_time = current_minute
@@ -258,8 +263,6 @@ while True:
         camera.take_picture()
         update_message_display('Picture taken')
         window1["-IMAGE-"].update(filename=system.picture_file)
-
-
 
     # Handle events for window 3
     event3, values3 = window3.read(timeout=100)  # Timeout for non-blocking read
