@@ -5,27 +5,30 @@ import growLights as lights
 import camera as camera
 
 
+# This class handles variables for the system, specifically lights and pumps, checking if they should be on or not
 class System:
     def __init__(self):
         schedule = read_schedule('../Config/Schedule.txt')
         curr_time = datetime.datetime.now()
-        self.hydroponic_pump = 0
-        self.hp_start_time = curr_time.minute
-        self.potted_start_time = schedule[2]
-        self.potted_end_time = schedule[3]
-        self.pot_pump = 0
-        self.light_start = schedule[0]
-        self.light_end = schedule[1]
-        self.lights = 0
-        self.pump_force_off = 1
-        self.light_force_off = 1
-        self.picture_file = '../Images/Originals/resized.png'
+        self.hydroponic_pump = 0  # if hydroponic pumps should be on (1 or 0)
+        self.hp_start_time = curr_time.minute  # time the hydroponics should turn on
+        self.potted_start_time = schedule[2]  # time the potted pumps should turn on
+        self.potted_end_time = schedule[3]  # time the potted pumps should turn off
+        self.pot_pump = 0  # if potted pumps should be on (1 or 0)
+        self.light_start = schedule[0]  # time the lights should turn on
+        self.light_end = schedule[1]  # time the lights should turn off
+        self.lights = 0  # if the lights should be on (1 or 0)
+        self.pump_force_off = 1  # forces all pumps off if 1
+        self.light_force_off = 1  # forces all lights off if 1
+        self.picture_file = '../Images/Originals/resized.png'  # file path to display in console
 
     # turn lights on if they need to be or turn them off
     def lights_switch(self):
         if self.lights:
+            print('Turned lights on')
             lights.lights_on()
         else:
+            print('Turned lights off')
             lights.lights_off()
 
     # Turn lights on if within schedule, otherwise turn them off
@@ -61,6 +64,7 @@ class System:
         else:
             self.pot_pump = 0
 
+    # turns pumps on or off as set by time and force off
     def pumps_switch(self):
         if self.pump_force_off == 1:
             # Turn all pumps off, then break out of method
@@ -82,6 +86,7 @@ class System:
             # turn pot pumps off
             pumps.potted_off()
 
+    # toggles the force pump off variable
     def toggle_force(self):
         if self.pump_force_off == 1:
             self.pump_force_off = 0
@@ -90,6 +95,7 @@ class System:
             self.pump_force_off = 1
             return 1
 
+    # Toggles the force lights off variable
     def toggle_lights(self):
         if self.light_force_off == 1:
             self.light_force_off = 0
@@ -133,8 +139,10 @@ def save_schedule(filename, new_schedule):
         print(f"An error occurred: {str(e)}")
 
 
+# Initialize the system
 system = System()
 
+# read the schedule into the system
 schedule = read_schedule('../Config/Schedule.txt')
 
 # Define the layout for the windows
@@ -158,6 +166,7 @@ layout_window3 = [
     [sg.InputText(key='-INPUT-', size=(20, 1)), sg.Button('Send')]
 ]
 
+# Window 4: Sets schedule
 layout_window4 = [
     [sg.Text('Lights Schedule.txt')],
     [sg.Text('Start Time'), sg.InputText(schedule[0], size=(10, 1), key='-LIGHTS_START-'),
@@ -184,6 +193,7 @@ window1 = sg.Window('NDVI Image', layout_window1, location=(0,0), finalize=True)
 window2 = sg.Window('Control Panel', layout_window2, size=(600, 200), location=(0, 330))
 window3 = sg.Window('Message Display', layout_window3, size=(300, 200), location=(640, 375))
 window4 = sg.Window('Schedule Panel', layout_window4, size=(300, 275), location=(630, 0))
+
 
 while True:
 

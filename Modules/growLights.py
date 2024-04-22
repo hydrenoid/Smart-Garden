@@ -8,8 +8,10 @@ class Relay(OutputDevice):
 
 LIGHTS_RELAY = OutputDevice(26,initial_value=None)
 
+# Turns lights relay on
 def lights_on():
     LIGHTS_RELAY.on()
 
+# Turns lights relay off
 def lights_off():
     LIGHTS_RELAY.off()

@@ -8,6 +8,7 @@ class Relay(OutputDevice):
         super(Relay, self).__init__(pin)
 
 
+# Set relays for each gpio pin
 HP1_RELAY = OutputDevice(12,initial_value=None)
 HP2_RELAY = OutputDevice(16,initial_value=None)
 POT1_RELAY = OutputDevice(20,initial_value=None)
@@ -36,7 +37,7 @@ def hydroponics_on():
     print('All hydroponic pumps are on.')
 
 
-# TODO: Turns all potted plants on
+# Turns all potted plants on
 def potted_on():
     POT1_RELAY.off()
     POT2_RELAY.off()
@@ -50,7 +51,7 @@ def hydroponics_off():
     print('All hydroponic pumps are off.')
 
 
-# TODO: Turns all potted pumps off
+# Turns all potted pumps off
 def potted_off():
     POT1_RELAY.on()
     POT2_RELAY.on()

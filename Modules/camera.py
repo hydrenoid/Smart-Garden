@@ -10,6 +10,7 @@ camera_config = picam2.create_still_configuration(main={"size": (1920, 1080)}, l
 picam2.configure(camera_config)
 picam2.start()
 
+# Displays the image to in a window
 def display(image, image_name):
     image = np.array(image, dtype=float)/float(255)
     shape = image.shape
@@ -22,6 +23,7 @@ def display(image, image_name):
     cv2.destroyAllWindows()
 
 
+# Stretches the contrasted image
 def contrast_stretch(im):
     in_min = np.percentile(im, 5)
     in_max = np.percentile(im, 95)
@@ -36,6 +38,7 @@ def contrast_stretch(im):
     return out
 
 
+# Calculates the ndvi of the image
 def calc_ndvi(image):
     b, g, r = cv2.split(image)
     bottom = (r.astype(float) + b.astype(float))
@@ -44,23 +47,21 @@ def calc_ndvi(image):
     return ndvi
 
 
-
-#TODO: Takes a picture and saves it to the file "/Smart-Garden/Images/Originals"
+# Takes a picture and saves it to the file "/Smart-Garden/Images/Originals"
 def take_picture():
-    
-    
-
+    # Capture the image
     original = picam2.capture_array("main")
 
     timestr = time.strftime("%Y%m%d-%H%M%S")
 
+    # Save the image
     cv2.imwrite('../Images/Originals/original.png', original)
     
     # Resize the image to fit in the window, e.g., 800x450
     resized_orig_image = cv2.resize(original, (400, 225))
     cv2.imwrite('../Images/Originals/resized.png', resized_orig_image)
 
-
+    # Go from original image to the final ndvi color mapped image
     contrasted_image = contrast_stretch(original)
     ndvi_image = calc_ndvi(contrasted_image)
     ndvi_contrasted = contrast_stretch(ndvi_image)
@@ -77,16 +78,8 @@ def take_picture():
     
     print('PICTURE TAKEN AND SAVED')
 
-    #todo process the image
-    #health = process_image(original, timestr)
 
-
-#TODO: Sparse out the plants from the rest of picture
-def photo_sparse():
-    print('Parsing out pictures.')
-
-
-#TODO: Process image and return a health percentage
+# Process image and return a health percentage
 def process_image(original, timestr):
     contrasted = contrast_stretch(original)
 
@@ -99,7 +92,7 @@ def process_image(original, timestr):
 
     cv2.imwrite('Images/Originals/original_' + timestr, color_mapped_image)
 
-    # TODO: generate health index from image
+    # generate health index from image
     health = 0
     return health
 
